@@ -1,18 +1,32 @@
 // lib/admin.ts
+/**
+ * Admin authorization configuration
+ * 
+ * ADMIN_EMAILS is the SINGLE SOURCE OF TRUTH for administrator access
+ * This array is used by:
+ * - Server-side middleware and API routes (auth-server.ts)
+ * - Client-side components for UI display only (never for security decisions)
+ * - Database RLS policies (see supabase/schema.sql)
+ * 
+ * To add an admin:
+ * 1. Update ADMIN_EMAILS below
+ * 2. Verify RLS policy is_admin() in Supabase matches this list
+ * 3. Test authorization flows
+ */
+
 import { supabase } from './supabase'
 
 // ============================================
-// ADMIN CONFIGURATION
+// ADMIN CONFIGURATION - SINGLE SOURCE OF TRUTH
 // ============================================
 export const ADMIN_EMAILS = [
   'gizmokzu@gmail.com',
   'joelkaudzu9@gmail.com',
   'elshaddaimpaso@gmail.com',
-  // Add more admin emails here
 ]
 
 // ============================================
-// CHECK IF USER IS ADMIN
+// CHECK IF USER IS ADMIN (Client-side helper)
 // ============================================
 export function isAdmin(email: string | undefined): boolean {
   if (!email) return false

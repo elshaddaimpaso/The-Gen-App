@@ -1,21 +1,19 @@
 // app/(organiser)/layout.tsx
+/**
+ * Organizer Layout - Protected Admin Area
+ * 
+ * This layout ensures only authenticated admin users can access the dashboard
+ * Client-side checks are for UX only; server-side auth is the actual security boundary
+ */
+
 'use client'
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { isAdmin } from '@/lib/admin'
 import { useRouter } from 'next/navigation'
 import { Shield } from 'lucide-react'
 import toast from 'react-hot-toast'
-
-function isAdmin(email: string | undefined): boolean {
-  const ADMIN_EMAILS = [
-    'gizmokzu@gmail.com',
-    'joelkaudzu9@gmail.com',
-    'elshaddaimpaso@gmail.com',
-  ]
-  if (!email) return false
-  return ADMIN_EMAILS.includes(email.toLowerCase())
-}
 
 export default function OrganiserLayout({
   children,
@@ -49,7 +47,8 @@ export default function OrganiserLayout({
 
       setAuthorized(true)
     } catch (error) {
-      console.error('Access denied:', error)
+      console.error('Access check error:', error)
+      toast.error('Unable to verify access')
       router.push('/')
     } finally {
       setLoading(false)
